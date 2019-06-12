@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:b="http://quakearts.com/2.0/boot"
+	xmlns:c="http://quakearts.com/2.0/common">
+<ui:composition template="/base/template.xhtml">
+    <ui:define name="content">
+   		<h:form>
+			<b:messages showDetail="true" dismissible="true" id="messages" styleClass="pop-alert" successMessage="true"></b:messages>
+            <span class="h4">#{reportQueryPage.reportQuery.id != 0? 'Edit':'Create'} Report Query</span>
+    		<ui:include src="../cp/reportQuery.crud.xhtml">
+				<ui:param name="reportQuery" value="#{reportQueryPage.reportQuery}"></ui:param>
+			</ui:include>
+			<b:buttonGroup id="buttons">
+				<b:button>
+					<b:glyph value="save" />
+					Save
+					<c:saveUpdate object="#{reportQueryPage.reportQuery}" action="update" unless="#{reportQueryPage.reportQuery.id == 0}"></c:saveUpdate>
+					<c:saveUpdate object="#{reportQueryPage.reportQuery}" action="save" unless="#{reportQueryPage.reportQuery.id != 0}"></c:saveUpdate>
+					<f:ajax execute="@form" render="messages buttons" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+				</b:button>
+				<b:button disabled="#{reportQueryPage.reportQuery.id == 0}">
+					<b:glyph value="trash" />
+					Delete
+					<c:delete object="#{reportQueryPage.reportQuery}"></c:delete>
+					<c:set as="#{null}" var="#{reportQueryPage.reportQuery}"></c:set>
+					<f:ajax execute="@this" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+				</b:button>
+				<b:button disabled="#{reportQueryPage.reportQuery.id == 0}">
+					<b:glyph value="erase " />
+					Reset
+					<c:set as="#{null}" var="#{reportQueryPage.reportQuery}"></c:set>
+					<f:ajax execute="@this" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+				</b:button>
+			</b:buttonGroup>
+   		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

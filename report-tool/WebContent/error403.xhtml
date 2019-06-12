@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:b="http://quakearts.com/2.0/boot"
+	  xmlns:c="http://quakearts.com/2.0/common"
+	  xmlns:f="http://java.sun.com/jsf/core">
+<ui:composition template="base/template.xhtml">
+<ui:define name="content">
+	<b:column sm="12" md="6" offsetmd="3">
+		<b:panel type="warning">
+			<f:facet name="header">
+				Access denied
+			</f:facet>
+			You are not authorized to view this page
+			<b:form>
+				<b:button>
+					<b:glyph value="log-out"></b:glyph>Logout
+					<c:logout redirect="#{facesContext.externalContext.requestContextPath}/rp/main.jsf"></c:logout>
+				</b:button>			
+			</b:form>
+		</b:panel>
+	</b:column>
+</ui:define>
+</ui:composition>
+</html>

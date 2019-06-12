@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:b="http://quakearts.com/2.0/boot"
+	xmlns:c="http://quakearts.com/2.0/common">
+<ui:composition template="/base/template.xhtml">
+    <ui:define name="content">
+		<h:form>
+ 			<b:messages showDetail="true" dismissible="true" id="messages" styleClass="pop-alert" successMessage="true"></b:messages>
+    		<span class="h4">#{(reportQueryParameterPage.reportQueryParameter ne null) and reportQueryParameterPage.reportapp.mode eq 'edit'?'Edit ':(reportQueryParameterPage.reportapp.mode eq 'read'?'View ':'Search ')} Report Query Parameter</span>
+    		<br />
+            <h:commandLink styleClass="btn btn-primary" rendered="#{(reportQueryParameterPage.reportapp.mode eq 'edit' or reportQueryParameterPage.reportapp.mode eq 'read') and (param.reportQueryParameter eq null)}">
+				<b:glyph value="backward"></b:glyph>Back to search...
+				<c:set as="#{null}" var="#{reportQueryParameterPage.reportapp.mode}" />
+    			<c:set as="#{null}" var="#{reportQueryParameterPage.reportQueryParameter}"></c:set>
+				<f:ajax execute="@form" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+			</h:commandLink>
+			<b:row rendered="#{empty reportQueryParameterPage.reportapp.mode}">	
+				<b:pagination for="#{table}" pageSize="10"></b:pagination>
+				<b:dataTable value="#{reportQueryParameterPage.reportQueryParameterList}" var="reportQueryParameter" binding="#{table}">
+    				<h:column>
+    					<f:facet name="header">
+    						ID
+    					</f:facet>
+						#{reportQueryParameter.id}
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Report Query
+    					</f:facet>
+						#{reportQueryParameter.reportQuery.name}
+						<h:outputLink value="#{facesContext.externalContext.requestContextPath}/ui/reportQuery.list.jsf" rendered="#{reportQueryParameter.reportQuery != null}">View
+							<f:param name="reportQuery" value="#{reportQueryParameter.reportQuery.id}"></f:param>
+						</h:outputLink>
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Display Name
+    					</f:facet>
+						#{reportQueryParameter.displayName}
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Variable Name
+    					</f:facet>
+						#{reportQueryParameter.variableName}
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Type
+    					</f:facet>
+						#{reportQueryParameter.type}
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Required
+    					</f:facet>
+    					<b:glyph value="check" style="color:green" rendered="#{reportQueryParameter.required}" />
+    					<b:glyph value="remove" style="color:red" rendered="#{!reportQueryParameter.required}" />
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Valid
+    					</f:facet>
+    					<b:glyph value="check" style="color:green" rendered="#{reportQueryParameter.valid}" />
+    					<b:glyph value="remove" style="color:red" rendered="#{!reportQueryParameter.valid}" />
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Action
+    					</f:facet>
+    					<h:commandLink value="Edit">
+    						<c:set as="#{reportQueryParameter}" var="#{reportQueryParameterPage.reportQueryParameter}"></c:set>
+    						<c:set as="edit" var="#{reportQueryParameterPage.reportapp.mode}" />
+							<f:ajax execute="@form" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+    					</h:commandLink>
+     					<br />
+    					<h:commandLink value="View">
+    						<c:set as="#{reportQueryParameter}" var="#{reportQueryParameterPage.reportQueryParameter}"></c:set>
+    						<c:set as="read" var="#{reportQueryParameterPage.reportapp.mode}" />
+							<f:ajax execute="@form" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+    					</h:commandLink>
+    				</h:column>
+    			</b:dataTable>
+			</b:row>
+			<b:row>
+				<ui:include src="../cp/reportQueryParameter.crud.xhtml">
+					<ui:param name="reportQueryParameter" value="#{reportQueryParameterPage.reportQueryParameter}"></ui:param>
+				</ui:include>
+				<b:buttonGroup rendered="#{reportQueryParameterPage.reportapp.mode eq 'edit'}">
+					<b:button>
+						<b:glyph value="save" />
+						Save
+						<c:saveUpdate object="#{reportQueryParameterPage.reportQueryParameter}" action="update"></c:saveUpdate>
+						<f:ajax execute="@form" render="messages" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+					</b:button>
+					<b:button>
+						<b:glyph value="trash" />
+						Delete
+						<c:delete object="#{reportQueryParameterPage.reportQueryParameter}"></c:delete>
+						<c:executeAction listener="#{reportQueryParameterPage.removeReportQueryParameter}"></c:executeAction>
+						<c:set as="#{null}" var="#{reportQueryParameterPage.reportQueryParameter}"></c:set>
+						<c:set as="#{null}" var="#{reportQueryParameterPage.reportapp.mode}"></c:set>
+						<f:ajax execute="@this" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+					</b:button>
+				</b:buttonGroup>
+				<b:button rendered="#{reportQueryParameterPage.reportapp.mode eq 'read'}">
+					<b:glyph value="edit" />
+					Edit
+					<c:set as="edit" var="#{reportQueryParameterPage.reportapp.mode}" />
+					<f:ajax execute="@this" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+				</b:button>
+				<b:button rendered="#{empty reportQueryParameterPage.reportapp.mode}">
+					<b:glyph value="search" />
+					Search
+					<c:executeAction listener="#{reportQueryParameterPage.findReportQueryParameter}"></c:executeAction>
+					<f:ajax execute="@form" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+				</b:button>
+			</b:row>
+		</h:form>
+    </ui:define>
+</ui:composition>
+</html>

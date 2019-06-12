@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:b="http://quakearts.com/2.0/boot"
+	xmlns:c="http://quakearts.com/2.0/common">
+<ui:component>
+	<c:unique>
+    	<h:panelGroup id="roleReportMappingReportInset" layout="block" styleClass="#{loader.overlayClass}">
+    		<b:formGroup>
+    			<label id="report_label">Report
+    				<h:commandLink value="New" styleClass="#{!roleReportMappingPage.reportDropdownHelper.inCreateMode?'':'collapse'}"
+						rendered="#{roleReportMappingPage.inCreateOrEditMode}">
+    					<f:ajax onevent="#{loader.overlayAjaxLoader}" execute="@this" render="roleReportMappingReportInset"></f:ajax>
+    					<f:setPropertyActionListener value="#{true}" target="#{roleReportMappingPage.reportDropdownHelper.inCreateMode}"></f:setPropertyActionListener>
+    				</h:commandLink>
+    			</label>
+    			<b:selectOneInput mainClass="#{loader.overlayClass}" disabled="#{roleReportMappingPage.reportapp.mode eq 'read' || roleReportMappingPage.reportDropdownHelper.inCreateMode}"
+    				value="#{roleReportMapping.report}" autocomplete="true"
+    				suggestion="#{roleReportMappingPage.reportDropdownHelper.searchText}" delay="1"
+    				listener="#{roleReportMappingPage.reportDropdownHelper.filterItems}"
+    				onevent="#{loader.overlayAjaxLoader}">
+    				<f:selectItems value="#{roleReportMappingPage.reportDropdownHelper.foundItems}" 
+    					var="report" itemValue="#{report}" itemLabel= "#{report.name}">
+    				</f:selectItems>
+    				<c:pojoConverter></c:pojoConverter>
+    			</b:selectOneInput>
+    		</b:formGroup>
+    		<h:panelGroup rendered="#{roleReportMappingPage.reportDropdownHelper.inCreateMode}">
+    			<span class="h4">Create Report</span>
+    			<ui:include src="report.crud.xhtml">
+    				<ui:param name="report" value="#{roleReportMappingPage.reportDropdownHelper.report}"></ui:param>
+    			</ui:include>
+    			<b:buttonGroup>
+        			<b:button value="Save Report">
+						<c:saveUpdate object="#{roleReportMappingPage.reportDropdownHelper.report}" action="save" />
+        				<f:setPropertyActionListener value="#{roleReportMappingPage.reportDropdownHelper.report}" target="#{roleReportMapping.report}"></f:setPropertyActionListener>
+    					<f:setPropertyActionListener value="#{false}" target="#{roleReportMappingPage.reportDropdownHelper.inCreateMode}"></f:setPropertyActionListener>
+        				<f:ajax execute="roleReportMappingReportInset" render="roleReportMappingReportInset" onevent="#{loader.overlayAjaxLoader}"></f:ajax>
+        			</b:button>
+        			<b:button value="Cancel">
+    					<f:ajax onevent="#{loader.overlayAjaxLoader}" execute="@this" render="roleReportMappingReportInset"></f:ajax>
+    					<f:setPropertyActionListener value="#{false}" target="#{roleReportMappingPage.reportDropdownHelper.inCreateMode}"></f:setPropertyActionListener>
+        			</b:button>
+    			</b:buttonGroup>
+    			<br />
+    			<br />
+    		</h:panelGroup>		
+    	</h:panelGroup>	
+	</c:unique>
+	<b:formGroup>
+		<label id="roleName_label">Role Name</label>
+		<h:inputText styleClass="form-control" value="#{roleReportMapping.roleName}" disabled="#{roleReportMappingPage.reportapp.mode eq 'read'}">
+		</h:inputText>
+	</b:formGroup>
+	<b:formGroup>
+		<label id="valid_label"><h:selectBooleanCheckbox disabled="#{roleReportMappingPage.reportapp.mode eq 'read'}" value="#{roleReportMapping.valid}"></h:selectBooleanCheckbox>Valid</label>
+	</b:formGroup>
+</ui:component>
+</html>

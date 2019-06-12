@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:b="http://quakearts.com/2.0/boot"
+	xmlns:c="http://quakearts.com/2.0/common">
+<ui:composition template="/base/template.xhtml">
+    <ui:define name="content">
+		<h:form>
+ 			<b:messages showDetail="true" dismissible="true" id="messages"></b:messages>
+    		<span class="h4">#{(reportColumnConverterPage.reportColumnConverter ne null) and reportColumnConverterPage.reportapp.mode eq 'edit'?'Edit ':(reportColumnConverterPage.reportapp.mode eq 'read'?'View ':'Search ')} Report Column Converter</span>
+    		<br />
+            <h:commandLink styleClass="btn btn-primary" rendered="#{(reportColumnConverterPage.reportapp.mode eq 'edit' or reportColumnConverterPage.reportapp.mode eq 'read') and (param.reportColumnConverter eq null)}">
+				<b:glyph value="backward"></b:glyph>Back to search...
+				<c:set as="#{null}" var="#{reportColumnConverterPage.reportapp.mode}" />
+    			<c:set as="#{null}" var="#{reportColumnConverterPage.reportColumnConverter}"></c:set>
+				<f:ajax execute="@form" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+			</h:commandLink>
+			<b:row rendered="#{empty reportColumnConverterPage.reportapp.mode}">	
+				<b:pagination for="#{table}" pageSize="10"></b:pagination>
+				<b:dataTable value="#{reportColumnConverterPage.reportColumnConverterList}" var="reportColumnConverter" binding="#{table}">
+    				<h:column>
+    					<f:facet name="header">
+    						Converter Class
+    					</f:facet>
+						#{reportColumnConverter.converterClass}
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Id
+    					</f:facet>
+						#{reportColumnConverter.id}
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Positions
+    					</f:facet>
+						#{reportColumnConverter.positions}
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Report Query
+    					</f:facet>
+						#{reportColumnConverter.reportQuery}
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Valid
+    					</f:facet>
+						#{reportColumnConverter.valid}
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Action
+    					</f:facet>
+    					<h:commandLink value="Edit">
+    						<c:set as="#{reportColumnConverter}" var="#{reportColumnConverterPage.reportColumnConverter}"></c:set>
+    						<c:set as="edit" var="#{reportColumnConverterPage.reportapp.mode}" />
+							<f:ajax execute="@form" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+    					</h:commandLink>
+    					<br />
+    					<h:commandLink value="View">
+    						<c:set as="#{reportColumnConverter}" var="#{reportColumnConverterPage.reportColumnConverter}"></c:set>
+    						<c:set as="read" var="#{reportColumnConverterPage.reportapp.mode}" />
+							<f:ajax execute="@form" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+    					</h:commandLink>
+    				</h:column>
+    			</b:dataTable>
+			</b:row>
+			<b:row>
+				<ui:include src="../cp/reportColumnConverter.crud.xhtml">
+					<ui:param name="reportColumnConverter" value="#{reportColumnConverterPage.reportColumnConverter}"></ui:param>
+				</ui:include>
+				<b:buttonGroup rendered="#{reportColumnConverterPage.reportapp.mode eq 'edit'}">
+					<b:button>
+						<b:glyph value="save" />
+						Save
+						<c:saveUpdate object="#{reportColumnConverterPage.reportColumnConverter}" action="update"></c:saveUpdate>
+						<f:ajax execute="@form" render="messages" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+					</b:button>
+					<b:button>
+						<b:glyph value="trash" />
+						Delete
+						<c:delete object="#{reportColumnConverterPage.reportColumnConverter}"></c:delete>
+						<c:executeAction listener="#{reportColumnConverterPage.removeReportColumnConverter}"></c:executeAction>
+						<c:set as="#{null}" var="#{reportColumnConverterPage.reportColumnConverter}"></c:set>
+						<c:set as="#{null}" var="#{reportColumnConverterPage.reportapp.mode}"></c:set>
+						<f:ajax execute="@form" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+					</b:button>
+				</b:buttonGroup>
+				<b:button rendered="#{reportColumnConverterPage.reportapp.mode eq 'read'}">
+					<b:glyph value="edit" />
+					Edit
+					<c:set as="edit" var="#{reportColumnConverterPage.reportapp.mode}" />
+					<f:ajax execute="@form" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+				</b:button>
+				<b:button rendered="#{empty reportColumnConverterPage.reportapp.mode}">
+					<b:glyph value="search" />
+					Search
+					<c:executeAction listener="#{reportColumnConverterPage.findReportColumnConverter}"></c:executeAction>
+					<f:ajax execute="@form" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
+				</b:button>
+			</b:row>
+		</h:form>
+    </ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:b="http://quakearts.com/2.0/boot"
+	xmlns:c="http://quakearts.com/2.0/common">
+<ui:composition template="/base/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+			<b:messages showDetail="true" id="messages" dismissible="true" successMessage="true"
+				styleClass="pop-alert"></b:messages>
+			<b:panel>
+				<f:facet name="header">
+					Configure a Data Source
+]				<b:formGroup>
+					<label>Data Source Type</label>
+					<b:selectOneInputGroup value="#{dataSourceConfiguration.dataSourceType}"
+						data-overlay-target="#{dataSourceConfigPanelComp.clientId}"
+						id="dataSourceTypeSelect">
+						<f:facet name="label">
+							<b:fa value="database"></b:fa>
+						</f:facet>
+						<f:selectItems value="#{dataSourceConfiguration.dataSourceTypes}"
+							var="dataSourceType" itemLabel="#{dataSourceType.displayName}"></f:selectItems>
+						<f:ajax onevent="#{loader.overlayAjaxLoader}" execute="@this" render="dataSourceConfigPanel copyDataSourceConfigPanel"></f:ajax>
+					</b:selectOneInputGroup>
+				</b:formGroup>
+				<h:panelGroup layout="block" id="dataSourceConfigPanel" binding="#{dataSourceConfigPanelComp}">
+					<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null}">
+						<label>Data Source Name</label>
+						<h:inputText styleClass="form-control" 
+							value="#{dataSourceConfiguration.dataSourceConfigurator.dataSourceName}"></h:inputText>
+					</b:formGroup>
+					<ui:repeat var="dataSourceConfigField"
+						value="#{dataSourceConfiguration.dataSourceConfigurator.commonConfigFields}">
+						<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null}">
+							<label>#{dataSourceConfigField.displayName}</label>
+							<h:inputText styleClass="form-control" value="#{dataSourceConfigField.value}"
+								converter="#{dataSourceConfigField.converter}"
+								rendered="#{dataSourceConfigField.type ne 'BOOLEAN' and dataSourceConfigField.type ne 'PASSWORD'}"></h:inputText>
+							<h:inputSecret styleClass="form-control" value="#{dataSourceConfigField.value}"
+								rendered="#{dataSourceConfigField.type eq 'PASSWORD'}"></h:inputSecret>
+							<b:button rendered="#{dataSourceConfigField.type eq 'BOOLEAN'}">
+								<b:fa value="toggle-on" rendered="#{dataSourceConfigField.value}" />
+								<b:fa value="toggle-off" style="color:blue" rendered="#{!dataSourceConfigField.value}" />
+								<f:ajax render="@this" />
+								<c:set var="#{dataSourceConfigField.value}"
+									as="#{!dataSourceConfigField.value}" />
+							</b:button>
+						</b:formGroup>
+					</ui:repeat>
+					<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null}">
+						<label>
+							Advanced Properties
+						</label>
+						<b:button data-overlay-target="#{advancedDataSourceConfigFieldsPanelComp.clientId}">
+							<b:fa value="toggle-on" rendered="#{dataSourceConfiguration.dataSourceConfigurator.inAdvancedMode}"></b:fa>
+							<b:fa value="toggle-off" style="color:blue" rendered="#{!dataSourceConfiguration.dataSourceConfigurator.inAdvancedMode}"></b:fa>
+							<f:ajax onevent="#{loader.overlayAjaxLoader}" render="advancedDataSourceConfigFieldsPanel @this"></f:ajax>
+							<c:set var="#{dataSourceConfiguration.dataSourceConfigurator.inAdvancedMode}"
+								as="#{!dataSourceConfiguration.dataSourceConfigurator.inAdvancedMode}"></c:set>
+						</b:button>
+					</b:formGroup>
+					<h:panelGroup layout="block" id="advancedDataSourceConfigFieldsPanel"
+						binding="#{advancedDataSourceConfigFieldsPanelComp}"
+						style="max-height:200px; overflow-x:false; overflow-y:scroll">
+						<ui:repeat var="advancedDataSourceConfigField"
+							value="#{dataSourceConfiguration.dataSourceConfigurator.advancedFields}">
+							<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null and dataSourceConfiguration.dataSourceConfigurator.inAdvancedMode}">
+								<label>#{advancedDataSourceConfigField.displayName}</label>
+								<h:inputText styleClass="form-control" value="#{advancedDataSourceConfigField.value}"
+									converter="#{advancedDataSourceConfigField.converter}"
+									rendered="#{advancedDataSourceConfigField.type ne 'BOOLEAN'}"></h:inputText>
+								<b:button rendered="#{advancedDataSourceConfigField.type eq 'BOOLEAN'}">
+									<b:fa value="toggle-on" rendered="#{advancedDataSourceConfigField.value}" />
+									<b:fa value="toggle-off" style="color:blue" rendered="#{!advancedDataSourceConfigField.value}" />
+									<f:ajax render="@this" />
+									<c:set var="#{advancedDataSourceConfigField.value}"
+										as="#{!advancedDataSourceConfigField.value}" />
+								</b:button>
+							</b:formGroup>
+						</ui:repeat>
+					</h:panelGroup>
+					<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null}">
+						<label>Maximum Pool Size</label>
+						<h:inputText styleClass="form-control" 
+							value="#{dataSourceConfiguration.dataSourceConfigurator.maxPoolSize}">
+							<f:converter converterId="javax.faces.Integer"></f:converter>	
+						</h:inputText>
+					</b:formGroup>
+					<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null}">
+						<label>Minimum Pool Size</label>
+						<h:inputText styleClass="form-control" 
+							value="#{dataSourceConfiguration.dataSourceConfigurator.minPoolSize}">
+							<f:converter converterId="javax.faces.Integer"></f:converter>	
+						</h:inputText>
+					</b:formGroup>
+					<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null}">
+						<label>Borrow Connection Timeout</label>
+						<h:inputText styleClass="form-control" 
+							value="#{dataSourceConfiguration.dataSourceConfigurator.borrowConnectionTimeout}">
+							<f:converter converterId="javax.faces.Integer"></f:converter>	
+						</h:inputText>
+					</b:formGroup>
+					<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null}">
+						<label>Maximum Idle Time</label>
+						<h:inputText styleClass="form-control" 
+							value="#{dataSourceConfiguration.dataSourceConfigurator.maxIdleTime}">
+							<f:converter converterId="javax.faces.Integer"></f:converter>	
+						</h:inputText>
+					</b:formGroup>
+					<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null}">
+						<label>Maximum Life Time</label>
+						<h:inputText styleClass="form-control" 
+							value="#{dataSourceConfiguration.dataSourceConfigurator.maxLifetime}">
+							<f:converter converterId="javax.faces.Integer"></f:converter>	
+						</h:inputText>
+					</b:formGroup>
+					<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null}">
+						<label>Reap Timeout</label>
+						<h:inputText styleClass="form-control" 
+							value="#{dataSourceConfiguration.dataSourceConfigurator.reapTimeout}">
+							<f:converter converterId="javax.faces.Integer"></f:converter>	
+						</h:inputText>
+					</b:formGroup>
+					<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null}">
+						<label>Maintenance Interval</label>
+						<h:inputText styleClass="form-control" 
+							value="#{dataSourceConfiguration.dataSourceConfigurator.maintenanceInterval}">
+							<f:converter converterId="javax.faces.Integer"></f:converter>	
+						</h:inputText>
+					</b:formGroup>
+					<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null}">
+						<label>Login Timeout</label>
+						<h:inputText styleClass="form-control" 
+							value="#{dataSourceConfiguration.dataSourceConfigurator.loginTimeout}">
+							<f:converter converterId="javax.faces.Integer"></f:converter>	
+						</h:inputText>
+					</b:formGroup>
+					<b:formGroup rendered="#{dataSourceConfiguration.dataSourceConfigurator ne null}">
+						<label>Test Query</label>
+						<h:inputText styleClass="form-control" 
+							value="#{dataSourceConfiguration.dataSourceConfigurator.testQuery}">
+						</h:inputText>
+					</b:formGroup>
+					<b:formGroup>
+						<b:button styleClass="#{loader.overlayClass}">
+							<b:glyph value="save"></b:glyph> Save Data Source
+							<c:executeAction listener="#{dataSourceConfiguration.saveDataSource}" />
+							<f:ajax render="messages" execute="@form"></f:ajax>
+						</b:button>
+					</b:formGroup>
+				</h:panelGroup>
+			</b:panel>
+			<b:panel id="copyDataSourceConfigPanel">
+				<f:facet name="header">
+					Copy a Data Source
+				</f:facet>
+				<b:formGroup>
+					<label>Current Data Sources</label>
+					<b:selectOneListbox value="#{dataSourceConfiguration.copyDataSourceJndiName}"
+						limit="true" size="3" disabled="#{dataSourceConfiguration.dataSourceType eq null}"
+						id="copyDataSourceJndiNameSelect">
+						<f:selectItems value="#{dataSourceConfiguration.JNDIDataSources}"
+							var="dataSource" itemValue="#{dataSource.jndiName}"
+							itemLabel="#{dataSource.displayName}">
+						</f:selectItems>
+					</b:selectOneListbox>
+				</b:formGroup>
+				<b:formGroup>
+					<label>Replace data source with the same name
+						<h:selectBooleanCheckbox value="#{dataSourceConfiguration.inReplaceMode}" 
+						id="inReplaceModeBoolean" />
+					</label>
+				</b:formGroup>
+				<b:formGroup>
+						<b:button styleClass="#{loader.overlayClass}">
+							<b:glyph value="save"></b:glyph> Copy Data Source
+							<c:executeAction listener="#{dataSourceConfiguration.copyDataSource}" />
+							<f:ajax render="@form" execute="copyDataSourceJndiNameSelect inReplaceModeBoolean dataSourceTypeSelect"></f:ajax>
+						</b:button>
+					</b:formGroup>
+			</b:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

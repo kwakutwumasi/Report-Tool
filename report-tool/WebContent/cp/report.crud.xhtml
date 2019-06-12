@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:b="http://quakearts.com/2.0/boot"
+	xmlns:c="http://quakearts.com/2.0/common">
+<ui:component>
+	<b:formGroup>
+		<label id="name_label">Name<b:glyph value="asterisk" style="color:red" rendered="#{reportPage.inCreateOrEditMode}" /></label>
+		<h:inputText styleClass="form-control" value="#{report.name}" disabled="#{reportPage.reportapp.mode eq 'read'}"
+			required="#{reportPage.inCreateOrEditMode}"
+			requiredMessage="'Name' is required">
+		</h:inputText>
+	</b:formGroup>
+	<b:formGroup id="headerFormGroup">
+		<label id="header_label">Header 
+			<h:commandLink rendered="#{reportPage.inCreateOrEditMode}"><b:fa value="question-circle" /> <f:ajax listener="#{reportapp.toggleHelpTips}" render="headerFormGroup"></f:ajax> </h:commandLink>
+		</label>
+		<h:inputTextarea rows="3" styleClass="form-control" 
+			value="#{report.header}" disabled="#{reportPage.reportapp.mode eq 'read'}">
+		</h:inputTextarea>
+		<b:panel rendered="#{reportPage.inCreateOrEditMode and reportapp.helpTipsActive}">
+			<f:facet name="header">Notes:</f:facet>
+			<p>Format is the Velocity Template Language, version 1.7</p>
+			<p>Available variables are:</p>
+			<ul>
+				<li>reportName: The report name</li>
+				<li>reportQueryName: The name of the query that was executed</li>
+				<li>timestamp: The current date/time of report generation</li>
+				<li>All input parameters to the query</li>
+			</ul>
+			
+			<p>Example: <br />$reportName <br /> $reportQueryName <br /> $timestamp</p>
+		</b:panel>
+	</b:formGroup>
+	<b:formGroup>
+		<label id="dataSourceJndiName_label">Data Source JNDI Name<b:glyph value="asterisk" style="color:red" rendered="#{reportPage.inCreateOrEditMode}" /></label>
+		<b:selectOneInput value="#{report.dataSourceJndiName}" 
+			disabled="#{reportPage.reportapp.mode eq 'read'}"
+			required="#{reportPage.inCreateOrEditMode}"
+			requiredMessage="'Data Source JNDI Name' is required">
+			<f:selectItems value="#{dataSourceConfiguration.JNDIDataSources}" 
+				var="dataSource" itemValue="#{dataSource.jndiName}"
+				itemLabel="#{dataSource.displayName}" />
+		</b:selectOneInput>
+	</b:formGroup>
+	<b:formGroup>
+		<label id="valid_label"><h:selectBooleanCheckbox disabled="#{reportPage.reportapp.mode eq 'read'}" value="#{report.valid}"></h:selectBooleanCheckbox>Valid</label>
+	</b:formGroup>
+</ui:component>
+</html>

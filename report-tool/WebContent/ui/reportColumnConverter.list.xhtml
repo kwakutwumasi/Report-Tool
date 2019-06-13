@@ -22,15 +22,21 @@
 				<b:dataTable value="#{reportColumnConverterPage.reportColumnConverterList}" var="reportColumnConverter" binding="#{table}">
     				<h:column>
     					<f:facet name="header">
-    						Converter Class
+    						ID
     					</f:facet>
-						#{reportColumnConverter.converterClass}
+						#{reportColumnConverter.id}
     				</h:column>
     				<h:column>
     					<f:facet name="header">
-    						Id
+    						Report Query
     					</f:facet>
-						#{reportColumnConverter.id}
+						#{reportColumnConverter.reportQuery.name}
+    				</h:column>
+    				<h:column>
+    					<f:facet name="header">
+    						Converter Class
+    					</f:facet>
+						#{reportColumnConverter.converterClass}
     				</h:column>
     				<h:column>
     					<f:facet name="header">
@@ -40,15 +46,10 @@
     				</h:column>
     				<h:column>
     					<f:facet name="header">
-    						Report Query
-    					</f:facet>
-						#{reportColumnConverter.reportQuery}
-    				</h:column>
-    				<h:column>
-    					<f:facet name="header">
     						Valid
     					</f:facet>
-						#{reportColumnConverter.valid}
+    					<b:glyph value="check" style="color:green" rendered="#{reportColumnConverter.valid}" />
+    					<b:glyph value="remove" style="color:red" rendered="#{!reportColumnConverter.valid}" />
     				</h:column>
     				<h:column>
     					<f:facet name="header">

@@ -27,10 +27,18 @@ label {
 	margin-left: -2%;
 	z-index: 1031;
 }
+.date-panel{
+	position:absolute; 
+	z-index:1005; 
+	width:250px;
+	top:0px;
+	left:0px;
+}
 </style>
 <b:resource library="css" name="qaboot.material.overrides.css" type="css" position="bottom"></b:resource>
 </h:head>
 <h:body>
+<ui:insert name="top"></ui:insert>
 <b:ajaxLoader mainloaderimage="../resources/images/loading.gif" overlayloaderimage="../resources/images/loading-small.gif" miniloaderimage="../resources/images/loading-small.gif" startTimeout="100" />
 <b:container fluid="true">
 <b:navbar fluid="true" responsive="true" position="static-top">
@@ -49,7 +57,7 @@ label {
 					<h:outputLink value="#{facesContext.externalContext.requestContextPath}/ui/report.create.jsf"><span class="app-menu">Create a Report</span><b:flaticon value="folder"></b:flaticon></h:outputLink>
 					<h:outputLink value="#{facesContext.externalContext.requestContextPath}/ui/reportQuery.create.jsf"><span class="app-menu">Create a Report Query</span><b:flaticon value="magnifying-glass-with-two-way-arrows"></b:flaticon></h:outputLink>
 					<h:outputLink value="#{facesContext.externalContext.requestContextPath}/ui/reportQueryParameter.create.jsf"><span class="app-menu">Create a Report Query Parameter</span><b:glyph value="th-list"></b:glyph></h:outputLink>
-					<h:outputLink value="#{facesContext.externalContext.requestContextPath}/ui/reportColumnConverter.create.jsf"><span class="app-menu">Create a Report Column Converter</span><b:glyph value="th-list"></b:glyph></h:outputLink>
+					<h:outputLink value="#{facesContext.externalContext.requestContextPath}/ui/reportColumnConverter.create.jsf"><span class="app-menu">Create a Report Column Converter</span><b:fa value="exchange"></b:fa> </h:outputLink>
 					<h:outputLink value="#{facesContext.externalContext.requestContextPath}/ui/roleReportMapping.create.jsf"><span class="app-menu">Assign Report to Role</span><b:flaticon value="business-2"></b:flaticon></h:outputLink>
 				</b:menu>
 				<b:menu value="View">

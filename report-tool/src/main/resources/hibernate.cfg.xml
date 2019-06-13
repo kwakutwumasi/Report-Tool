@@ -11,6 +11,7 @@
   <property name="hibernate.default_schema">DBO</property>
   <property name="hibernate.bytecode.use_reflection_optimizer">true</property>
   <mapping class="com.quakearts.reporting.reporttool.model.Report"/>
+  <mapping class="com.quakearts.reporting.reporttool.model.ReportColumnConverter"/>
   <mapping class="com.quakearts.reporting.reporttool.model.ReportQuery"/>
   <mapping class="com.quakearts.reporting.reporttool.model.ReportQueryParameter"/>
   <mapping class="com.quakearts.reporting.reporttool.model.RoleReportMapping"/>

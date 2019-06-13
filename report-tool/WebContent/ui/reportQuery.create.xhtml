@@ -29,7 +29,7 @@
 					<f:ajax execute="@this" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>
 				</b:button>
 				<b:button disabled="#{reportQueryPage.reportQuery.id == 0}">
-					<b:glyph value="erase " />
+					<b:glyph value="erase" />
 					Reset
 					<c:set as="#{null}" var="#{reportQueryPage.reportQuery}"></c:set>
 					<f:ajax execute="@this" render="@form" onevent="#{loader.mainAjaxLoader}" onerror="ca.error"></f:ajax>

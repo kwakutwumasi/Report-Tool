@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import javax.inject.Singleton;
 import javax.naming.Binding;
+import javax.naming.InitialContext;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -104,9 +105,13 @@ public class DataSourceServiceImpl implements DataSourceService {
 		
 		if(inReplaceMode){
 			try {
-				JavaNamingDirectorySpiFactory
-					.getInstance().getJavaNamingDirectorySpi()
-					.getInitialContext().unbind("java:/jdbc/"+configurationPropertyMap.getString(PropertyNames.NAME.getPropertyName()));
+				InitialContext context = JavaNamingDirectorySpiFactory
+						.getInstance().getJavaNamingDirectorySpi()
+						.getInitialContext();
+				String jndiName = "java:/jdbc/"+configurationPropertyMap.getString(PropertyNames.NAME.getPropertyName());
+				AtomikosDataSourceBean dataSourceBean = (AtomikosDataSourceBean) context.lookup(jndiName);
+				dataSourceBean.close();
+				context.unbind(jndiName);
 			} catch (NamingException e) {
 				//not named. continue
 			}

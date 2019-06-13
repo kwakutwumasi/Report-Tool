@@ -20,6 +20,10 @@
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
 		<param-value>Development</param-value>
 	</context-param>
+	<context-param>
+		<param-name>com.quakearts.bootstrap.EXEMPT</param-name>
+		<param-value>.jar</param-value>
+	</context-param>
 	
 	<security-role>
 		<role-name>ReportUser</role-name>

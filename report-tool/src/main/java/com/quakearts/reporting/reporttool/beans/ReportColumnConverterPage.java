@@ -1,6 +1,7 @@
 package com.quakearts.reporting.reporttool.beans;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -75,6 +76,10 @@ public class ReportColumnConverterPage extends BaseBean {
 			ReportQuery reportQuery = reportColumnConverter.getReportQuery();
 			if(reportQuery!=null){
 				getReportQueryDropdownHelper().addToFoundItemsList(reportQuery);
+			}
+			String converterClassName = reportColumnConverter.getConverterClass();
+			if(converterClassName!=null){
+				foundClassNames = Arrays.asList(converterClassName);
 			}
 		}
 	}
@@ -156,8 +161,19 @@ public class ReportColumnConverterPage extends BaseBean {
 					.find(JarFileEntry.class)
 					.filterBy("id").withAValueLike("%"+classSuggestion+"%")
 					.thenList().stream().map(JarFileEntry::getId)
+					.filter(this::isAClassFile)
+					.map(this::convertToClassName)
 					.collect(Collectors.toList());
 		}
+	}
+	
+	private boolean isAClassFile(String id){
+		return id.endsWith(".class");
+	}
+	
+	private String convertToClassName(String classFile){
+		return classFile.replace(".class", "")
+				.replace("/", ".");
 	}
 	
 	private transient Validator converterClassNameValidator = (context,component,value)->{

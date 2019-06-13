@@ -48,7 +48,10 @@ public class DataSourceConfigurationPage extends BaseBean {
 	}
 
 	public void setDataSourceType(DataSourceType dataSourceType) {
-		this.dataSourceType = dataSourceType;
+		if(this.dataSourceType != dataSourceType){
+			this.dataSourceType = dataSourceType;
+			dataSourceConfigurator = null;
+		}
 	}
 
 	public DataSourceType[] getDataSourceTypes(){
@@ -64,9 +67,15 @@ public class DataSourceConfigurationPage extends BaseBean {
 	public void setInReplaceMode(boolean inReplaceMode) {
 		this.inReplaceMode = inReplaceMode;
 	}
+	
+	private transient List<DataSourceDisplay> dataSourceDisplayList;
 
 	public List<DataSourceDisplay> getJNDIDataSources(){
-		return dataSourceService.listDataSources();
+		if(dataSourceDisplayList==null){
+			dataSourceDisplayList = dataSourceService.listDataSources();			
+		}
+		
+		return dataSourceDisplayList;
 	}
 
 	private String copyDataSourceJndiName;
@@ -125,8 +134,7 @@ public class DataSourceConfigurationPage extends BaseBean {
 			processFields(jsonConfig, field);
 		}
 		
-		if(getDataSourceConfigurator()
-				.isInAdvancedMode()){
+		if(getDataSourceConfigurator().isInAdvancedMode()){
 			for(DataSourceConfigField field:getDataSourceConfigurator()
 					.getAdvancedFields()){
 				processFields(jsonConfig, field);
@@ -146,6 +154,7 @@ public class DataSourceConfigurationPage extends BaseBean {
 			addError("Invalid Input", "Unable to create data source file: "+e.getMessage(), FacesContext.getCurrentInstance());
 		}
 		dataSourceConfigurator = null;
+		dataSourceDisplayList = null;
 	}
 
 	private void setCommonProperties(JsonObject jsonConfig, DataSourceConfigurator dataSourceConfigurator) {

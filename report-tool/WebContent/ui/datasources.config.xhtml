@@ -13,7 +13,8 @@
 			<b:panel>
 				<f:facet name="header">
 					Configure a Data Source
-]				<b:formGroup>
+				</f:facet>
+				<b:formGroup>
 					<label>Data Source Type</label>
 					<b:selectOneInputGroup value="#{dataSourceConfiguration.dataSourceType}"
 						data-overlay-target="#{dataSourceConfigPanelComp.clientId}"
@@ -175,12 +176,12 @@
 					</label>
 				</b:formGroup>
 				<b:formGroup>
-						<b:button styleClass="#{loader.overlayClass}">
-							<b:glyph value="save"></b:glyph> Copy Data Source
-							<c:executeAction listener="#{dataSourceConfiguration.copyDataSource}" />
-							<f:ajax render="@form" execute="copyDataSourceJndiNameSelect inReplaceModeBoolean dataSourceTypeSelect"></f:ajax>
-						</b:button>
-					</b:formGroup>
+					<b:button styleClass="#{loader.overlayClass}">
+						<b:glyph value="save"></b:glyph> Copy Data Source
+						<c:executeAction listener="#{dataSourceConfiguration.copyDataSource}" />
+						<f:ajax render="@form" execute="copyDataSourceJndiNameSelect inReplaceModeBoolean dataSourceTypeSelect"></f:ajax>
+					</b:button>
+				</b:formGroup>
 			</b:panel>
 		</h:form>
 	</ui:define>

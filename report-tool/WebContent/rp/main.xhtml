@@ -6,9 +6,39 @@
 	xmlns:b="http://quakearts.com/2.0/boot"
 	xmlns:c="http://quakearts.com/2.0/common">
 <ui:composition template="/base/template.xhtml">
+	<ui:define name="top">
+		<h:form>
+			<b:panel id="dmyDatePopup" styleClass="date-panel collapse" binding="#{dmyDatePopupComp}">
+	    		<b:formGroup>
+		    		<b:date value="#{reportRunner.selectedDate}" format="dmy" 
+		    			max="10" min="10" id="dmyDate" binding="#{dmyDateComp}" />		    		
+	    		</b:formGroup>
+	    		<b:formGroup>
+	    			<b:button>
+	    				<b:fa value="clock-o" />
+	    				Done
+	    				<f:ajax listener="#{reportRunner.setDateParameter}" execute="dmyDate" onevent="qab.closeDmyDatePopup"></f:ajax>
+	    			</b:button>
+	    		</b:formGroup>
+	    	</b:panel>
+	    	<b:panel id="dmyhnDatePopup" styleClass="date-panel collapse" binding="#{dmyhnDatePopupComp}">
+	    		<b:formGroup>
+		    		<b:date value="#{reportRunner.selectedDate}" format="dmyhn" 
+		    			max="10" min="10" id="dmyhnDate" binding="#{dmyhnDateComp}" />		    		
+	    		</b:formGroup>
+	    		<b:formGroup>
+	    			<b:button>
+	    				<b:fa value="clock-o" />
+	    				Done
+	    				<f:ajax listener="#{reportRunner.setDateParameter}" execute="dmyhnDate" onevent="qab.closeDmyhnDatePopup"></f:ajax>
+	    			</b:button>
+	    		</b:formGroup>
+	    	</b:panel>			
+		</h:form>
+	</ui:define>
 	<ui:define name="content">
 		<h:form>
-		<b:messages showDetail="true" id="messages" dismissible="true" styleClass="pop-alert" successMessage="true"></b:messages>
+			<b:messages showDetail="true" id="messages" dismissible="true" styleClass="pop-alert" successMessage="true"></b:messages>
 		    <b:panel>
 		    	<f:facet name="header">
 		    		Select a report to run
@@ -96,32 +126,6 @@
 		    			</ui:repeat>
 		    		</ui:repeat>
 		    	</h:panelGroup>
-		    	<b:panel id="dmyDatePopup" style="position:fixed; z-index:1005" styleClass="collapse" binding="#{dmyDatePopupComp}">
-		    		<b:formGroup>
-			    		<b:date value="#{reportRunner.selectedDate}" format="dmy" 
-			    			max="10" min="10" id="dmyDate" binding="#{dmyDateComp}" />		    		
-		    		</b:formGroup>
-		    		<b:formGroup>
-		    			<b:button>
-		    				<b:fa value="clock-o" />
-		    				Done
-		    				<f:ajax listener="#{reportRunner.setDateParameter}" execute="dmyDate" onevent="qab.closeDmyDatePopup"></f:ajax>
-		    			</b:button>
-		    		</b:formGroup>
-		    	</b:panel>
-		    	<b:panel id="dmyhnDatePopup" style="position:fixed; z-index:1005" styleClass="collapse" binding="#{dmyhnDatePopupComp}">
-		    		<b:formGroup>
-			    		<b:date value="#{reportRunner.selectedDate}" format="dmyhn" 
-			    			max="10" min="10" id="dmyhnDate" binding="#{dmyhnDateComp}" />		    		
-		    		</b:formGroup>
-		    		<b:formGroup>
-		    			<b:button>
-		    				<b:fa value="clock-o" />
-		    				Done
-		    				<f:ajax listener="#{reportRunner.setDateParameter}" execute="dmyhnDate" onevent="qab.closeDmyhnDatePopup"></f:ajax>
-		    			</b:button>
-		    		</b:formGroup>
-		    	</b:panel>
 		    	<b:formGroup id="buttons">
 		    		<b:button>
 		    			<b:flaticon value="bar-chart-reload"></b:flaticon>

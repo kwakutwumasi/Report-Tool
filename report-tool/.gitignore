@@ -1,9 +1,0 @@
-/bin/
-/derby.log
-/tmlog*
-/internaldb/
-/atomikos/
-/webservers/
-/.classpath
-/.project
-/.settings/

@@ -157,7 +157,7 @@ public abstract class GeneratorBase implements Generator, LogChute, Serializable
 		Converter converter = converterService.getConverter(reportQuery, index);
 		
 		if(converter!=null){
-			String stringValue = converter.convertResult(resultSet, index);
+			String stringValue = converter.convertResult(state, resultSet, index);
 			if(stringValue==null){
 				writeEmptyCell(state);
 			} else {

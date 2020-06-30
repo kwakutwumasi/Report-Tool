@@ -8,8 +8,8 @@ import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import com.quakearts.webapp.facelets.base.BaseBean;
-import com.quakearts.webapp.orm.query.helper.ParameterMapBuilder;
 import com.quakearts.webapp.orm.exception.DataStoreException;
+import com.quakearts.webapp.orm.query.criteria.CriteriaMapBuilder;
 import com.quakearts.reporting.reporttool.model.Report;
 
 @Named("reportPage")
@@ -60,22 +60,25 @@ public class ReportPage extends BaseBean {
 	}
 	
 	public void findReport(ActionEvent event){
-		ParameterMapBuilder parameterBuilder = new ParameterMapBuilder();
+		CriteriaMapBuilder criteriaBuilder = CriteriaMapBuilder.createCriteria();
 		if(report.getDataSourceJndiName() != null && ! report.getDataSourceJndiName().trim().isEmpty()){
-			parameterBuilder.addVariableString("dataSourceJndiName", report.getDataSourceJndiName());
+			criteriaBuilder.property("dataSourceJndiName").mustBeLike(report.getDataSourceJndiName());
 		}
+		
 		if(report.getHeader() != null && ! report.getHeader().trim().isEmpty()){
-			parameterBuilder.addVariableString("header", report.getHeader());
+			criteriaBuilder.property("header").mustBeLike(report.getHeader());
 		}
+		
 		if(report.getName() != null && ! report.getName().trim().isEmpty()){
-			parameterBuilder.addVariableString("name", report.getName());
+			criteriaBuilder.property("name").mustBeLike(report.getName());
 		}
+		
 		if(report.isValid()){
-			parameterBuilder.add("valid", report.isValid());
+			criteriaBuilder.property("valid").mustNotBeEqualTo(report.isValid());
 		}
     		
 		try {
-			reportList = finder.findObjects(parameterBuilder.build());
+			reportList = finder.findObjects(criteriaBuilder.finish());
 		} catch (DataStoreException e) {
 			addError("Search error", "An error occured while searching for Report", FacesContext.getCurrentInstance());
 			log.severe("Exception of type " + e.getClass().getName() + " was thrown. Message is " + e.getMessage()

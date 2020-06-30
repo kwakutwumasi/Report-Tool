@@ -8,8 +8,8 @@ import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import com.quakearts.webapp.facelets.base.BaseBean;
-import com.quakearts.webapp.orm.query.helper.ParameterMapBuilder;
 import com.quakearts.webapp.orm.exception.DataStoreException;
+import com.quakearts.webapp.orm.query.criteria.CriteriaMapBuilder;
 import com.quakearts.reporting.reporttool.model.RoleReportMapping;
 import com.quakearts.reporting.reporttool.model.Report;
 
@@ -75,19 +75,21 @@ public class RoleReportMappingPage extends BaseBean {
 	}
 	
 	public void findRoleReportMapping(ActionEvent event){
-		ParameterMapBuilder parameterBuilder = new ParameterMapBuilder();
+		CriteriaMapBuilder criteriaBuilder = CriteriaMapBuilder.createCriteria();
 		if(roleReportMapping.getReport() != null){
-			parameterBuilder.add("report", roleReportMapping.getReport());
+			criteriaBuilder.property("report").mustBeEqualTo(roleReportMapping.getReport());
 		}
+		
 		if(roleReportMapping.getRoleName() != null && ! roleReportMapping.getRoleName().trim().isEmpty()){
-			parameterBuilder.addVariableString("roleName", roleReportMapping.getRoleName());
+			criteriaBuilder.property("roleName").mustBeLike(roleReportMapping.getRoleName());
 		}
+		
 		if(roleReportMapping.isValid()){
-			parameterBuilder.add("valid", roleReportMapping.isValid());
+			criteriaBuilder.property("valid").mustBeEqualTo(roleReportMapping.isValid());
 		}
     		
 		try {
-			roleReportMappingList = finder.findObjects(parameterBuilder.build());
+			roleReportMappingList = finder.findObjects(criteriaBuilder.finish());
 		} catch (DataStoreException e) {
 			addError("Search error", "An error occured while searching for Role Report Mapping", FacesContext.getCurrentInstance());
 			log.severe("Exception of type " + e.getClass().getName() + " was thrown. Message is " + e.getMessage()

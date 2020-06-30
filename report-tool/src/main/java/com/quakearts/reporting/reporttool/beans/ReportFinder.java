@@ -1,27 +1,29 @@
 package com.quakearts.reporting.reporttool.beans;
 
-import java.io.Serializable;
-import java.util.Map;
 import java.util.List;
 import com.quakearts.webapp.orm.DataStoreFactory;
 import com.quakearts.webapp.orm.query.QueryOrder;
+import com.quakearts.webapp.orm.query.criteria.CriteriaMap;
+import com.quakearts.webapp.orm.query.criteria.CriteriaMapBuilder;
 import com.quakearts.reporting.reporttool.model.Report;
-import static com.quakearts.webapp.orm.query.helper.ParameterMapBuilder.createParameters;
 
 public class ReportFinder {	
 
-	public List<Report> findObjects(Map<String, Serializable> parameters,QueryOrder...queryOrders){
-		return DataStoreFactory.getInstance().getDataStore().list(Report.class, parameters, queryOrders);
+	public List<Report> findObjects(CriteriaMap parameters, QueryOrder...queryOrders){
+		return DataStoreFactory.getInstance().getDataStore().find(Report.class).using(parameters).orderBy(queryOrders)
+				.thenList();
 	}
 	public Report getById(int id){
 		return DataStoreFactory.getInstance().getDataStore().get(Report.class,id);
 	}
-	public List<Report> filterByText(String searchString){
+	public List<Report> filterByText(String searchString) {
 		searchString = "%"+searchString+"%";
-		return DataStoreFactory.getInstance().getDataStore().list(Report.class, createParameters().disjoin()
-															.addVariableString("dataSourceJndiName", searchString)
-															.addVariableString("header", searchString)
-															.addVariableString("name", searchString)
-															.build());
+		return DataStoreFactory.getInstance().getDataStore().find(Report.class).using(CriteriaMapBuilder
+					.createCriteria().requireAnyOfTheFollowing()
+					.property("dataSourceJndiName").mustBeLike(searchString)
+					.property("header").mustBeLike(searchString)
+					.property("name").mustBeLike(searchString)
+					.finish())
+				.thenList();
 	}
 }

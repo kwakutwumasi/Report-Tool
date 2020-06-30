@@ -10,8 +10,8 @@ import javax.faces.event.ActionEvent;
 import javax.faces.validator.Validator;
 
 import com.quakearts.webapp.facelets.base.BaseBean;
-import com.quakearts.webapp.orm.query.helper.ParameterMapBuilder;
 import com.quakearts.webapp.orm.exception.DataStoreException;
+import com.quakearts.webapp.orm.query.criteria.CriteriaMapBuilder;
 import com.quakearts.reporting.reporttool.model.ReportQueryParameter;
 import com.quakearts.reporting.reporttool.model.ReportQuery;
 
@@ -78,34 +78,34 @@ public class ReportQueryParameterPage extends BaseBean {
 	}
 	
 	public void findReportQueryParameter(ActionEvent event){
-		ParameterMapBuilder parameterBuilder = new ParameterMapBuilder();
+		CriteriaMapBuilder criteriaBuilder = CriteriaMapBuilder.createCriteria();
 		if(reportQueryParameter.getDisplayName() != null && ! reportQueryParameter.getDisplayName().trim().isEmpty()){
-			parameterBuilder.addVariableString("displayName", reportQueryParameter.getDisplayName());
+			criteriaBuilder.property("displayName").mustBeLike(reportQueryParameter.getDisplayName());
 		}
 		if(reportQueryParameter.getExtraData() != null && ! reportQueryParameter.getExtraData().trim().isEmpty()){
-			parameterBuilder.addVariableString("extraData", reportQueryParameter.getExtraData());
+			criteriaBuilder.property("extraData").mustBeLike(reportQueryParameter.getExtraData());
 		}
 		if(reportQueryParameter.getPositions() != null && ! reportQueryParameter.getPositions().trim().isEmpty()){
-			parameterBuilder.addVariableString("positions", reportQueryParameter.getPositions());
+			criteriaBuilder.property("positions").mustBeLike(reportQueryParameter.getPositions());
 		}
 		if(reportQueryParameter.getReportQuery() != null){
-			parameterBuilder.add("reportQuery", reportQueryParameter.getReportQuery());
+			criteriaBuilder.property("reportQuery").mustBeEqualTo(reportQueryParameter.getReportQuery());
 		}
 		if(reportQueryParameter.isRequired()){
-			parameterBuilder.add("required", reportQueryParameter.isRequired());
+			criteriaBuilder.property("required").mustBeEqualTo(reportQueryParameter.isRequired());
 		}
 		if(reportQueryParameter.getType() != null){
-			parameterBuilder.add("type", reportQueryParameter.getType());
+			criteriaBuilder.property("type").mustBeEqualTo(reportQueryParameter.getType());
 		}
 		if(reportQueryParameter.isValid()){
-			parameterBuilder.add("valid", reportQueryParameter.isValid());
+			criteriaBuilder.property("valid").mustBeEqualTo(reportQueryParameter.isValid());
 		}
 		if(reportQueryParameter.getVariableName() != null && ! reportQueryParameter.getVariableName().trim().isEmpty()){
-			parameterBuilder.addVariableString("variableName", reportQueryParameter.getVariableName());
+			criteriaBuilder.property("variableName").mustBeLike(reportQueryParameter.getVariableName());
 		}
-    		
+
 		try {
-			reportQueryParameterList = finder.findObjects(parameterBuilder.build());
+			reportQueryParameterList = finder.findObjects(criteriaBuilder.finish());
 		} catch (DataStoreException e) {
 			addError("Search error", "An error occured while searching for Report Query Parameter", FacesContext.getCurrentInstance());
 			log.severe("Exception of type " + e.getClass().getName() + " was thrown. Message is " + e.getMessage()

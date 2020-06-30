@@ -8,8 +8,8 @@ import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import com.quakearts.webapp.facelets.base.BaseBean;
-import com.quakearts.webapp.orm.query.helper.ParameterMapBuilder;
 import com.quakearts.webapp.orm.exception.DataStoreException;
+import com.quakearts.webapp.orm.query.criteria.CriteriaMapBuilder;
 import com.quakearts.reporting.reporttool.model.ReportQuery;
 import com.quakearts.reporting.reporttool.model.Report;
 
@@ -75,28 +75,28 @@ public class ReportQueryPage extends BaseBean {
 	}
 	
 	public void findReportQuery(ActionEvent event){
-		ParameterMapBuilder parameterBuilder = new ParameterMapBuilder();
+		CriteriaMapBuilder criteriaBuilder = CriteriaMapBuilder.createCriteria();
 		if(reportQuery.getDataSourceJndiName() != null && ! reportQuery.getDataSourceJndiName().trim().isEmpty()){
-			parameterBuilder.addVariableString("dataSourceJndiName", reportQuery.getDataSourceJndiName());
+			criteriaBuilder.property("dataSourceJndiName").mustBeLike(reportQuery.getDataSourceJndiName());
 		}
 		if(reportQuery.getName() != null && ! reportQuery.getName().trim().isEmpty()){
-			parameterBuilder.addVariableString("name", reportQuery.getName());
+			criteriaBuilder.property("name").mustBeLike(reportQuery.getName());
 		}
 		if(reportQuery.getReport() != null){
-			parameterBuilder.add("report", reportQuery.getReport());
+			criteriaBuilder.property("report").mustBeEqualTo(reportQuery.getReport());
 		}
 		if(reportQuery.getSql() != null && ! reportQuery.getSql().trim().isEmpty()){
-			parameterBuilder.addVariableString("sql", reportQuery.getSql());
+			criteriaBuilder.property("sql").mustBeLike(reportQuery.getSql());
 		}
 		if(reportQuery.getType() != null){
-			parameterBuilder.add("type", reportQuery.getType());
+			criteriaBuilder.property("type").mustBeEqualTo(reportQuery.getType());
 		}
 		if(reportQuery.isValid()){
-			parameterBuilder.add("valid", reportQuery.isValid());
+			criteriaBuilder.property("valid").mustBeEqualTo(reportQuery.isValid());
 		}
     		
 		try {
-			reportQueryList = finder.findObjects(parameterBuilder.build());
+			reportQueryList = finder.findObjects(criteriaBuilder.finish());
 		} catch (DataStoreException e) {
 			addError("Search error", "An error occured while searching for Report Query", FacesContext.getCurrentInstance());
 			log.severe("Exception of type " + e.getClass().getName() + " was thrown. Message is " + e.getMessage()

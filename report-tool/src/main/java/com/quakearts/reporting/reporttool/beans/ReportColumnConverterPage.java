@@ -17,10 +17,10 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
 import com.quakearts.webapp.facelets.base.BaseBean;
-import com.quakearts.webapp.orm.query.helper.ParameterMapBuilder;
 import com.quakearts.webapp.orm.DataStoreFactory;
 import com.quakearts.webapp.orm.cdi.annotation.DataStoreFactoryHandle;
 import com.quakearts.webapp.orm.exception.DataStoreException;
+import com.quakearts.webapp.orm.query.criteria.CriteriaMapBuilder;
 import com.quakearts.reporting.reporttool.generator.converter.Converter;
 import com.quakearts.reporting.reporttool.model.ReportColumnConverter;
 import com.quakearts.reporting.reporttool.model.ReportQuery;
@@ -100,22 +100,22 @@ public class ReportColumnConverterPage extends BaseBean {
 	}
 	
 	public void findReportColumnConverter(ActionEvent event){
-		ParameterMapBuilder parameterBuilder = new ParameterMapBuilder();
+		CriteriaMapBuilder criteriaBuilder = CriteriaMapBuilder.createCriteria();
 		if(reportColumnConverter.getConverterClass() != null && ! reportColumnConverter.getConverterClass().trim().isEmpty()){
-			parameterBuilder.addVariableString("converterClass", reportColumnConverter.getConverterClass());
+			criteriaBuilder.property("converterClass").mustBeLike(reportColumnConverter.getConverterClass());
 		}
 		if(reportColumnConverter.getPositions() != null && ! reportColumnConverter.getPositions().trim().isEmpty()){
-			parameterBuilder.addVariableString("positions", reportColumnConverter.getPositions());
+			criteriaBuilder.property("positions").mustBeLike(reportColumnConverter.getPositions());
 		}
 		if(reportColumnConverter.getReportQuery() != null){
-			parameterBuilder.add("reportQuery", reportColumnConverter.getReportQuery());
+			criteriaBuilder.property("reportQuery").mustBeEqualTo(reportColumnConverter.getReportQuery());
 		}
 		if(reportColumnConverter.isValid()){
-			parameterBuilder.add("valid", reportColumnConverter.isValid());
+			criteriaBuilder.property("valid").mustBeEqualTo(reportColumnConverter.isValid());
 		}
     		
 		try {
-			reportColumnConverterList = finder.findObjects(parameterBuilder.build());
+			reportColumnConverterList = finder.findObjects(criteriaBuilder.finish());
 		} catch (DataStoreException e) {
 			addError("Search error", "An error occured while searching for Report Column Converter", FacesContext.getCurrentInstance());
 			log.severe("Exception of type " + e.getClass().getName() + " was thrown. Message is " + e.getMessage()

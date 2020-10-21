@@ -13,7 +13,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.naming.NamingException;
-
 import com.quakearts.reporting.reporttool.beans.ReportQueryParameterBean;
 import com.quakearts.reporting.reporttool.exception.GeneratorException;
 import com.quakearts.reporting.reporttool.generator.Generator;
@@ -22,12 +21,16 @@ import com.quakearts.reporting.reporttool.model.ReportQuery;
 import com.quakearts.reporting.reporttool.model.ReportQuery.QueryType;
 import com.quakearts.reporting.reporttool.services.DataSourceService;
 import com.quakearts.reporting.reporttool.services.ReportQueryService;
+import com.quakearts.reporting.reporttool.services.UserRoleParameterService;
 
 @Singleton
 public class ReportQueryServiceImpl implements ReportQueryService {
 
 	@Inject
 	private DataSourceService dataSourceService;
+	
+	@Inject
+	private UserRoleParameterService userRoleParameterService;
 
 	@Override
 	public void run(ReportQuery reportQuery, List<ReportQueryParameterBean> parameters, Generator generator,
@@ -80,6 +83,9 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 				break;
 			case CURRENTUSER:
 				populateUsernameParameters(statement, bean);
+				break;
+			case CURRENTUSERROLE:
+				populateRoleParameter(statement, bean);
 				break;
 			default:
 				populateStringParameters(statement, bean);
@@ -141,6 +147,18 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 				statement.setNull(position, Types.VARCHAR);
 			} else {
 				statement.setString(position, username);
+			}
+		}
+	}
+
+	private void populateRoleParameter(PreparedStatement statement, ReportQueryParameterBean bean) 
+			throws SQLException {
+		String roleValue = userRoleParameterService.resolve(bean);
+		for(int position:bean.getPositions()){
+			if(roleValue==null){
+				statement.setNull(position, Types.VARCHAR);
+			} else {
+				statement.setString(position, roleValue);
 			}
 		}
 	}

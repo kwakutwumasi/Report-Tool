@@ -101,6 +101,10 @@ public class ReportQueryParameterBean extends BaseBean implements Comparable<Rep
 		}
 	}
 	
+	public ReportQueryParameter getReportQueryParameter() {
+		return reportQueryParameter;
+	}
+	
 	public Serializable getValue() {
 		return value;
 	}

@@ -22,7 +22,7 @@ public class ReportQueryParameter extends IDBase {
 	private String positions;
 
 	public enum ParameterType {
-		INT, DOUBLE, DATE, DATETIME, STRING, DROPDOWN, AUTOCOMPLETE, CURRENTUSER
+		INT, DOUBLE, DATE, DATETIME, STRING, DROPDOWN, AUTOCOMPLETE, CURRENTUSER, CURRENTUSERROLE
 	}
 
 	@Column(length = 1024)

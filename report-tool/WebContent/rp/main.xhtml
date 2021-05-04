@@ -136,12 +136,11 @@
 		    		<h:commandLink onclick="qab.clearButton(this)" 
 		    			styleClass="btn btn-default" rendered="#{reportRunner.downloadReady}"
 		    			target="_blank">
-		    			<b:glyph value="download"></b:glyph>	
-			    		<b:flaticon value="interface-4" rendered="#{type == 'EXCEL'}" />
-    					<b:fa value="html5" rendered="#{type == 'HTML'}" />
-    					<b:fa value="file-text-o" rendered="#{type == 'CSV'}" />
+			    		<b:flaticon value="interface-4" rendered="#{reportRunner.generatorType == 'EXCEL'}" />
+    					<b:fa value="html5" rendered="#{reportRunner.generatorType == 'HTML'}" />
+    					<b:fa value="file-text-o" rendered="#{reportRunner.generatorType == 'CSV'}" />
 		    			<c:executeAction listener="#{reportRunner.download}" />
-		    			Download
+		    			#{reportRunner.generatorType == 'HTML'?'View':'Download'} 
 		    		</h:commandLink>
 		    	</b:formGroup>
 		    </b:panel>

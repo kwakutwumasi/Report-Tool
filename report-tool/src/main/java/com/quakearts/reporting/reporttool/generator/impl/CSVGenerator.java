@@ -50,7 +50,7 @@ public class CSVGenerator extends GeneratorBase {
 		}
 		stringBuilder.append(header).append("\r\n");
 		for(int index = 1; index<metaData.getColumnCount(); index++){
-			stringBuilder.append(index>1?",":"").append(metaData.getColumnName(index));
+			stringBuilder.append(index>1?",":"").append(metaData.getColumnLabel(index));
 		}
 		stringBuilder.append("\r\n");
 	}

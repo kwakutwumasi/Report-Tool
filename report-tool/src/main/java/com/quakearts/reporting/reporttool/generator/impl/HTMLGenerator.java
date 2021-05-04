@@ -75,7 +75,7 @@ public class HTMLGenerator extends GeneratorBase {
 		stringBuilder.append("\t\t<table class=\"table\">\r\n\t\t\t<thead>\r\n\t\t\t\t<tr>\r\n\t\t\t\t\t<th colspan=\"")
 			.append(metaData.getColumnCount()).append("\">").append(header).append("</th></tr>\r\n\t\t\t\t<tr>\r\n\t\t\t\t\t");
 		for(int index = 1; index<metaData.getColumnCount(); index++){
-			stringBuilder.append("<th>").append(metaData.getColumnName(index)).append("</th>");
+			stringBuilder.append("<th>").append(metaData.getColumnLabel(index)).append("</th>");
 		}
 		stringBuilder.append("\r\n\t\t\t\t</tr>\r\n\t\t\t</thead>\r\n\t\t\t<tbody>\t\t\t\t<tr>");
 	}

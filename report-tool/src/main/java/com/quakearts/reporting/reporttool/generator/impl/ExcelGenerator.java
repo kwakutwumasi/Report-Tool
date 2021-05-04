@@ -81,7 +81,7 @@ public class ExcelGenerator extends GeneratorBase {
 		font = workbook.createFont();
 		font.setBold(true);
 		for(int index = 1; index<metaData.getColumnCount(); index++){
-			headerString = new XSSFRichTextString(metaData.getColumnName(index));
+			headerString = new XSSFRichTextString(metaData.getColumnLabel(index));
 			headerString.applyFont(font);
 			
 			cell = row.createCell(index-1);
